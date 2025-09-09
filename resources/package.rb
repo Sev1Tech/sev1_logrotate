@@ -37,7 +37,7 @@ action_class do
     # the normal way to install ps modules only works on _some_ windows hosts
     # so we have to fight stupid with more stupid.
     remote_file ::File.join(Chef::Config[:file_cache_path], 'log-rotate.nuget') do
-      source "https://psg-prod-eastus.azureedge.net/packages/log-rotate.#{node['sev1-logrotate']['logrotate-powershell']['version']}.nupkg"
+      source "https://sev1-resources-public.s3.us-west-2.amazonaws.com/nuget/log-rotate.#{node['sev1-logrotate']['logrotate-powershell']['version']}.nupkg"
     end
 
     archive_file ::File.join(Chef::Config[:file_cache_path], 'log-rotate.nuget') do
