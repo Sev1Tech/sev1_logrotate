@@ -1,6 +1,10 @@
 module Logrotate
   require 'chef'
   class Config
+
+    # FIXME: this path might only be valid on RHEL9?
+    LOGROTATE_BIN = '/usr/sbin/logrotate'
+
     # Report log files configured for rotation by logrotate, but configuration which is not managed by
     # chef. The point here is to make sure that we don't configure a log file to be rotated twice.
     class Unmanaged
@@ -11,7 +15,7 @@ module Logrotate
       def configs
         cwd = '/etc'
 
-        so = Mixlib::ShellOut.new("logrotate -d #{::File.join(cwd,'logrotate.conf')}")
+        so = Mixlib::ShellOut.new("#{LOGROTATE_BIN} -d #{::File.join(cwd,'logrotate.conf')}")
         so.run_command
 
         config_files = []
@@ -32,7 +36,7 @@ module Logrotate
       end
 
       def logs(conf_file)
-        so = Mixlib::ShellOut.new("logrotate -d #{conf_file}")
+        so = Mixlib::ShellOut.new("#{LOGROTATE_BIN} -d #{conf_file}")
         so.run_command
         log_files = so.stderr.lines.select { |line| line.start_with?('considering log') }
         log_files.map! { |file| file.delete_prefix('considering log') }
